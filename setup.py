@@ -3,7 +3,7 @@ try:
 except ImportError:
     from distutils.core import setup
 
-import library_hw4
+import bse_dsdm
 
 
 def get_requirements(requirements_path='requirements.txt'):
@@ -12,10 +12,10 @@ def get_requirements(requirements_path='requirements.txt'):
 
 
 setup(
-    name='library_hw4',
-    version=library_hw4.__version__,
-    description='homework4',
-    author='Andrew, Mariam,Daniela',
+    name='bse_dsdm',
+    version=bse_dsdm:.__version__,
+    description='Barcelona School of Economics Data Science for Decision Making Library',
+    author='Andrew Bennett',
     packages=find_packages(where='', exclude=['tests']),
     install_requires=get_requirements(),
     setup_requires=['pytest-runner', 'wheel'],

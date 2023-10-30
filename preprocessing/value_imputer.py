@@ -44,6 +44,14 @@ def impute_values(df, impute_type, impute_constant=None, columns_to_impute=None,
         imputed_df = pd.DataFrame(imputed_data, columns=df.columns)
 
 
+def impute_outliers_with_mean(data, column_name, outliers):
+    # Calculate the mean excluding outliers
+    filtered_data = data[~data.index.isin(outliers.index)]
+    mean_without_outliers = filtered_data[column_name].mean()
 
+    # Impute the mean to the outliers
+    data.loc[outliers.index, column_name] = mean_without_outliers
+
+    return data
 
 

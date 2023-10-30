@@ -1,0 +1,6 @@
+.idea/
+*.csv
+.eggs/
+*.egg-info/
+*.pyc
+.ipynb_checkpoints/
