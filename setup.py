@@ -4,6 +4,7 @@ except ImportError:
     from distutils.core import setup
 
 import bse_dsdm
+print(dir(bse_dsdm))
 
 
 def get_requirements(requirements_path='requirements.txt'):
@@ -13,10 +14,11 @@ def get_requirements(requirements_path='requirements.txt'):
 
 setup(
     name='bse_dsdm',
-    version=bse_dsdm:.__version__,
+    version="0.1.0",
     description='Barcelona School of Economics Data Science for Decision Making Library',
     author='Andrew Bennett',
     packages=find_packages(where='', exclude=['tests']),
+    include_package_data=True,
     install_requires=get_requirements(),
     setup_requires=['pytest-runner', 'wheel'],
     url='https://github.com/danielavelez1997/hw4.git',

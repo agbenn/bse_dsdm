@@ -3,44 +3,47 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 
 
-def encode_categorical_column():
-    # Create a dataframe with a categorical variable
-    df = pd.DataFrame({'id': [1,2,3,4],
-                    'color': ['red', 'blue', 'green', 'red']})
-
+def encode_categorical_column(data):
+    """
+    nominal or categorical i.e. blue red green
+    """
     # Apply one-hot encoding
     encoder = OneHotEncoder()
-    encoded_data = encoder.fit_transform(df[['color']]).toarray()
-
+    
+    encoded_data = encoder.fit_transform(data).toarray()
     # Convert the encoded data back to a dataframe
-    encoded_df = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out (['color']))
+    encoded_data = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(data.columns))
 
+    return pd.concat([encoded_data, data.drop(columns=data.columns)], axis=1)
 
-    # Concatenate the encoded dataframe with the 'id' column
-    encoded_df = pd.concat([df['id'], encoded_df], axis=1)
+        
 
-    print('Original data:')
-    display(df)
-    print('\nEncoded data:')
-    display(encoded_df)
-
-def encode_ordinal_variable(column_of_data, mapping=None): 
-
+def encode_ordinal_variable(data, columns=None, mapping=None): 
+    """
+    levels of category or ordinal i.e. low medium high
+    """
     if mapping:
-        column_of_data =column_of_data.map(mapping)
+        data[columns] = data[columns].map(mapping)
     else:
         # Apply label encoding
         encoder = LabelEncoder()
-        column_of_data = encoder.fit_transform(column_of_data)
+        for col in data.columns:
+            encoded_data = encoder.fit_transform(data[col])
+            full_col_name = col + '_encoded'
+            data[full_col_name] = encoded_data
 
-    return
+    return data
 
 def target_encode_column(df, categorical_groupby_value, compute_column, compute_type='mean'): 
-    # useful when there is a correlation between the categorical variable and the other variable.
+    """ 
+    useful when there is a correlation between the categorical variable and the other variable.
+    i.e. mean GDP grouped by country
+
+    """
 
     grouped_by_mapping = None
 
-    # Calculating the mean GDP for each country
+    # Calculating the 
     if compute_type == 'mean':
         grouped_by_mapping = df.groupby(categorical_groupby_value)[compute_column].mean()
     elif compute_type == 'sum':
