@@ -15,11 +15,11 @@ data3 = pd.concat([data, data1, data2], axis=1)
 
 @pytest.mark.unittest
 def test_encode_categorical_variable():
-    assert encode_categorical_column(data).shape[1] == 7
+    assert encode_categorical_columns(data).shape[1] == 7
 
 @pytest.mark.unittest   
 def test_encode_ordinal_variable():
-    assert encode_ordinal_variable(data1).shape[1] == 4
+    assert encode_ordinal_columns(data1).shape[1] == 4
 
 @pytest.mark.unittest
 def test_target_encode_column():

@@ -1,0 +1,13 @@
+categorical
+    club_name
+    league_name
+    nationality_name
+    preferred_foot
+    work_rate
+    body_type
+    real_face
+
+player traits needs clean up
+
+ideas 
+groupby impution - term contract by club 

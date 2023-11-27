@@ -6,14 +6,12 @@ import matplotlib.pyplot as plt
 
 from sklearn.impute import KNNImputer
 
-def impute_values(df, impute_type='constant', impute_constant=None, columns_to_impute=None, n_neighbors=2):
+def impute_values(df, impute_type='constant', impute_constant=None, n_neighbors=2):
     """
     allows for value impution
-    options: ffill, bfill, mean, knn
+    options: ffill, bfill, mean, knn, mode
     """
     filled_df = None
-    if columns_to_impute:
-        df = df[columns_to_impute]
 
     if impute_type == 'constant' and impute_constant is not None:
         filled_df = df.fillna(value=impute_constant)
@@ -26,6 +24,8 @@ def impute_values(df, impute_type='constant', impute_constant=None, columns_to_i
         filled_df = df.fillna(method='bfill')
     elif impute_type == 'mean':
         filled_df = df.fillna(df.mean())
+    elif impute_type == 'mode':
+        filled_df = df.fillna(df.mode())
     elif impute_type == 'knn':
         imputer = KNNImputer(n_neighbors=n_neighbors)
 

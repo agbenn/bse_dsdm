@@ -16,11 +16,11 @@ def impute_outliers_with_mean(data, outlier_detection_method='iso_forest', cov_c
         outliers = get_outlier_mask_one_class_svm(data)
 
     # Calculate the mean excluding outliers
-    filtered_data = data[~outliers]
+    filtered_data = data.loc[~outliers,:]
     mean_without_outliers = filtered_data.mean()
 
     # Impute the mean to the outliers
-    data[outliers] = mean_without_outliers
+    data.loc[outliers,:] = mean_without_outliers
 
     return data
 

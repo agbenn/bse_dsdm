@@ -16,3 +16,4 @@ def test_value_imputer():
     assert impute_values(df, 'mean').isna().sum().sum() == 0
     assert impute_values(df, 'knn', n_neighbors=3).isna().sum().sum() == 0
 
+test_value_imputer()

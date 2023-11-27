@@ -3,22 +3,22 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import LabelEncoder
 
 
-def encode_categorical_column(data):
+def encode_categorical_columns(data):
     """
     nominal or categorical i.e. blue red green
     """
     # Apply one-hot encoding
-    encoder = OneHotEncoder()
+    encoder = OneHotEncoder(drop='first')
     
     encoded_data = encoder.fit_transform(data).toarray()
     # Convert the encoded data back to a dataframe
     encoded_data = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(data.columns))
 
-    return pd.concat([encoded_data, data.drop(columns=data.columns)], axis=1)
+    return encoded_data
 
         
 
-def encode_ordinal_variable(data, columns=None, mapping=None): 
+def encode_ordinal_columns(data, columns=None, mapping=None): 
     """
     levels of category or ordinal i.e. low medium high
     """
