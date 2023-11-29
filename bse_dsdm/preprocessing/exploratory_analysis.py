@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.metrics import accuracy_score, confusion_matrix
-import lightgbm as lgb
+#import lightgbm as lgb
 import numpy as np
 from math import log, e
 import seaborn as sns
@@ -104,7 +104,7 @@ def get_columns_with_na(df, threshold=100):
     missing_percentages = df.isnull().sum() / len(df) * 100
 
     # Get the column names that exceed the threshold
-    columns_to_drop = missing_percentages[missing_percentages >= threshold].index
+    columns_to_drop = missing_percentages[missing_percentages > threshold].index
 
     return columns_to_drop
 #TODO create a function to output all of the above in a report

@@ -8,14 +8,18 @@ def scale_features(data, scaling_method='z_score'):
     :param object column_of_data: a column or series of a dataframe
     '''
     for column in data.columns: 
-        if scaling_method == 'z_score':
-            data[column] = standardize_with_z_score(data[column])
-        elif scaling_method == 'min_max_mean':
-            data[column] = min_max_scale_with_mean(data[column])
-        elif scaling_method == 'min_max':
-            data[column] = min_max_scale(data[column])    
-        elif scaling_method == 'iqr':
-            data[column] = robust_scaling_with_iqr(data[column])
+        try:    
+            if scaling_method == 'z_score':
+                data[column] = standardize_with_z_score(data[column])
+            elif scaling_method == 'min_max_mean':
+                data[column] = min_max_scale_with_mean(data[column])
+            elif scaling_method == 'min_max':
+                data[column] = min_max_scale(data[column])    
+            elif scaling_method == 'iqr':
+                data[column] = robust_scaling_with_iqr(data[column])
+        except Exception as e: 
+            print('an error occurred scaling columns: ' + str(column))
+            print('error: ' + str(e))
 
     return data
 

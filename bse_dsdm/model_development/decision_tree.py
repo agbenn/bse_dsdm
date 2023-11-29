@@ -1,6 +1,7 @@
 
 import matplotlib.pyplot as plt
 from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix
 import lightgbm as lgb
 import numpy as np
@@ -62,33 +63,24 @@ def get_entropy(column_of_labels):
 
     return ent
 
-def fit_decision_tree(X,y):
-    # Train a Decision Tree classifier
-    clf = DecisionTreeClassifier(random_state=2, max_depth = 3) # Restric to 3 levels
-    clf.fit(X, y)
 
 def fit_random_forest(X,y):
     # Initialize a random forest classifier
     rf_classifier = RandomForestClassifier(n_estimators=100, random_state=1)
 
     # Train the random forest model
-    rf_classifier.fit(X_train, y_train)
+    rf_classifier.fit(X, y)
 
-    # Make predictions on the test set
-    y_pred = rf_classifier.predict(X_test)
+    return rf_classifier
 
 def fit_light_gbm(X,y):
     # Initialize a LightGBM classifier
     lgb_classifier = lgb.LGBMClassifier(n_estimators=100, random_state=1)
 
     # Train the LightGBM model
-    lgb_classifier.fit(X_train, y_train)
+    lgb_classifier.fit(X, X)
 
-    # Make predictions on the test set
-    y_pred = lgb_classifier.predict(X_test)
-
-    # Calculate accuracy
-    accuracy = accuracy_score(y_test, y_pred)
+    return lgb_classifier
 
 def plot_decision_tree(clf, feature_names, class_names):
     # Plot the decision tree
@@ -96,7 +88,7 @@ def plot_decision_tree(clf, feature_names, class_names):
     plot_tree(clf, filled=True, feature_names=feature_names, class_names=class_names)
     plt.show()
 
-def plot_confusion_matrix():
+def plot_confusion_matrix(y_test, y_pred):
     # Plot confusion matrix
     cm = confusion_matrix(y_test, y_pred)
     plt.figure(figsize=(6, 4))
@@ -104,5 +96,26 @@ def plot_confusion_matrix():
     plt.title("Confusion Matrix")
     plt.xlabel("Predicted")
     plt.ylabel("True")
+    plt.show()
+
+def plot_feature_importance(model, data, model_name):
+    # Step 4: Compare most important features
+    feature_importances = model.feature_importances_
+
+    # Scale feature importances for better visualization
+    scaled_importances = feature_importances / np.sum(feature_importances)
+
+    # Plot Scaled Feature Importance Comparison
+    plt.figure(figsize=(10, 6))
+    width = 0.35
+
+    plt.bar(np.arange(len(data.columns[:-1])), scaled_importances, width, color='blue', label=model_name)
+
+    plt.xlabel('Features')
+    plt.ylabel('Scaled Feature Importance')
+    plt.title('Scaled Feature Importance Comparison')
+    plt.xticks(np.arange(len(data.columns[:-1])) + width / 2, data.columns[:-1], rotation=90)
+    plt.legend()
+    plt.tight_layout()
     plt.show()
 
