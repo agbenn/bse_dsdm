@@ -3,6 +3,35 @@ from sklearn.metrics import make_scorer, r2_score, mean_squared_error, accuracy_
 import pandas as pd
 import numpy as np
 
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import roc_auc_score
+
+def split_data(self, data, test_size=0.2, random_state=42):
+        train_data, test_data = train_test_split(data, test_size=test_size, random_state=random_state)
+        return train_data, test_data
+
+class Model:
+    def __init__(self, feature_columns, target_column, params=None):
+        print('initializing class')
+        self.__feature_columns = feature_columns
+        self.__target_column = target_column
+        self.__params = params
+        if self.__params is not None:
+            self.model = RandomForestClassifier(n_estimators=self.__params['n_estimators'], random_state=42)
+        else:
+            self.model = RandomForestClassifier(n_estimators=100, random_state=42)
+
+    def train(self, train_data):
+        self.model.fit(train_data[self.__feature_columns], train_data[self.__target_column])
+
+    def predict(self, df):
+        return self.model.predict_proba(df[self.__feature_columns])[:, 1]
+
+    def get_accuracy(self, y_test, y_pred):
+        return roc_auc_score(y_test, y_pred)
+
+
 def k_folds_cross_validation(model, X, y, no_k_folds=3):
     """
     * Pros: k-fold cross-validation offers a balance between computational efficiency and performance estimation accuracy. It partitions the data into k subsets (folds) and runs the model k times, using each fold as a test set once.

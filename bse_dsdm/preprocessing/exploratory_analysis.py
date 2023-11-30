@@ -8,7 +8,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
 from math import log, e
 import seaborn as sns
-
+'''
 def gini_impurity(value_counts):
     """
     Gini impurity measures the probability of incorrectly classifying a randomly chosen element in a dataset.
@@ -99,13 +99,24 @@ def visualize_scatter_plot(df, col1, col2):
     plt.xlabel(col1)
     plt.ylabel(col2)
     plt.show()
+'''
 
-def get_columns_with_na(df, threshold=100):
+def remove_columns_with_na(df, threshold):
     missing_percentages = df.isnull().sum() / len(df) * 100
 
     # Get the column names that exceed the threshold
     columns_to_drop = missing_percentages[missing_percentages > threshold].index
-
-    return columns_to_drop
+    df= df.drop(columns_to_drop, axis=1)
+    return df
 #TODO create a function to output all of the above in a report
+
+
+def columns_with_na(df):
+    categorical_columns = df.select_dtypes(include=['object']).columns
+    numerical_columns = df.select_dtypes(exclude=['object']).columns
+
+    categorical_na_columns = [col for col in categorical_columns if df[col].isna().any()]
+    numerical_na_columns = [col for col in numerical_columns if df[col].isna().any()]
+
+    return categorical_na_columns, numerical_na_columns
 
