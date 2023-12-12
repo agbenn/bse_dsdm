@@ -1,4 +1,4 @@
-#%%
+# %%
 
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -6,18 +6,18 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
 
 
-class Split_data:
-    def __init__(self, file_path, test_size, random_state):
-        self.file_path = file_path
-        self.test_size = test_size
-        self.random_state = random_state
+class Data:
+    def __init__(self):
         self.train_data = None
         self.test_data = None
-    def load_data(self):
-        data = pd.read_csv(self.file_path)
-        train_data, test_data = train_test_split(data, test_size=self.test_size, random_state=self.random_state)
-        self.train_data=train_data
-        self.test_data=test_data
+        self.data = None
+
+    def load_data(self, file_path):
+        data = pd.read_csv(file_path)
+        self.data = data
+
+    def split_data(self, test_size=0.2, random_state=42):
+        self.train_data, self.test_data = train_test_split(self.data, test_size=test_size, random_state=random_state)
 
     def get_train_data(self):
         if self.train_data is None:
@@ -30,8 +30,6 @@ class Split_data:
         return self.test_data
 
 
-
 def load_csv_data(file_path):
     df = pd.read_csv(file_path)
     return df
-   
