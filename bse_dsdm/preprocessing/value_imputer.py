@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from sklearn.impute import KNNImputer
 
 
-def impute_values(df, columns_to_impute, impute_type='constant', impute_constant=None, n_neighbors=2):
+def impute_values(df, impute_type='constant', impute_constant=None, n_neighbors=2):
     """
     allows for value impution
     options: ffill, bfill, mean, knn, mode
@@ -20,9 +20,11 @@ def impute_values(df, columns_to_impute, impute_type='constant', impute_constant
         print('must input a impute value constant')
         return
     elif impute_type == 'ffill':
-        filled_df = df.fillna(method='ffill')
+        print(filled_df)
+        filled_df = df.ffill()
+        print(filled_df)
     elif impute_type == 'bfill':
-        filled_df = df.fillna(method='bfill')
+        filled_df = df.bfill()
     elif impute_type == 'mean':
         filled_df = df.fillna(df.mean(numeric_only=True))
     elif impute_type == 'mode':
@@ -35,8 +37,7 @@ def impute_values(df, columns_to_impute, impute_type='constant', impute_constant
 
         # Convert the imputed data back to DataFrame
         filled_df = pd.DataFrame(imputed_data, columns=df.columns)
-        filled_df = df.copy()
-        filled_df[columns_to_impute] = imputed_data
+        
     else:
         print('invalid method selection')
 

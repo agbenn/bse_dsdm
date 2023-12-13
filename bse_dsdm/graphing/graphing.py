@@ -2,6 +2,8 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+
+
 def plot_3d_scatter(data, x_col,y_col,z_col,color_col, x_title=None, y_title=None, z_title=None):
     # Create a 3D scatter plot
     fig = go.Figure(data=go.Scatter3d(
@@ -78,18 +80,6 @@ def multiplot_bar():
     plt.tight_layout()
     plt.show()
 
-def plot_heat_map(df):
-    df_corr = df.corr()
-
-    # Plot correlations
-    # Remove upper triangle
-    fig, ax = plt.subplots(figsize=(14,8))
-    ax = sns.heatmap(df_corr, annot = True)
-
-
-import plotly.graph_objects as go
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 def plot_heat_map(df):
     df_corr = df.corr()
@@ -131,14 +121,6 @@ def plot_distributions(data, columns):
     plt.tight_layout()
     plt.show()
 
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-
-import matplotlib.pyplot as plt
-import seaborn as sns
-import pandas as pd
-
 def plot_distributions_stacked(dataframes, columns, labels, colors=None):
     """
     Plot stacked distributions of specified columns in multiple dataframes.
@@ -148,6 +130,10 @@ def plot_distributions_stacked(dataframes, columns, labels, colors=None):
     - columns: List of column names to plot
     - colors: List of colors for each dataframe's distributions
     """
+    # Example usage:
+    # Assuming you have three DataFrames called 'df1', 'df2', and 'df3' with columns 'column1', 'column2', ...
+    # plot_distributions_stacked([df1, df2, df3], ['column1', 'column2', 'column3'])
+    
     # Set default colors if not provided
     if colors is None:
         colors = sns.color_palette("husl", n_colors=len(dataframes))
@@ -175,7 +161,4 @@ def plot_distributions_stacked(dataframes, columns, labels, colors=None):
     plt.tight_layout()
     plt.show()
 
-# Example usage:
-# Assuming you have three DataFrames called 'df1', 'df2', and 'df3' with columns 'column1', 'column2', ...
-# plot_distributions_stacked([df1, df2, df3], ['column1', 'column2', 'column3'])
 

@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import roc_auc_score
 
 
-class Data:
+class MLDataLoader:
     def __init__(self):
         self.train_data = None
         self.test_data = None
