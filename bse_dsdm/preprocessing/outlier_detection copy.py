@@ -45,6 +45,7 @@ def remove_outliers(df, removal_type="std", cov_contamination=0.3, std_threshold
         print("no method selected")
 
 
+
 def remove_outliers_iqr(data, iqr_multiplier=1.5): 
     """
     Remove outliers outside of the interquartile range (IQR) in specified columns of a DataFrame.
@@ -58,8 +59,6 @@ def remove_outliers_iqr(data, iqr_multiplier=1.5):
     - DataFrame without outliers in the specified columns
     """
 
-    data_no_outliers = data.copy()
-
     for column in data.columns:
         # Calculate the IQR for the column
         Q1 = data[column].quantile(0.25)
@@ -70,10 +69,10 @@ def remove_outliers_iqr(data, iqr_multiplier=1.5):
         lower_bound = Q1 - iqr_multiplier * IQR
         upper_bound = Q3 + iqr_multiplier * IQR
 
-        # Replace outliers outside of the bounds with NaN
-        data_no_outliers[column] = np.where((data_no_outliers[column] < lower_bound) | (data_no_outliers[column] > upper_bound), np.nan, data_no_outliers[column])
+        # Remove outliers outside of the bounds
+        data = data[(data[column] >= lower_bound) & (data[column] <= upper_bound)]
 
-    return data_no_outliers
+    return data
 
 
 def remove_outliers_std_deviation(data, threshold=3):
@@ -83,8 +82,6 @@ def remove_outliers_std_deviation(data, threshold=3):
     :param int threshold: level at which outliers are trimmed by std dev
     '''
 
-    data_no_outliers = data.copy()
-
     for col in data.columns:
         mean_value = data[col].mean()
         std_value = data[col].std()
@@ -92,75 +89,42 @@ def remove_outliers_std_deviation(data, threshold=3):
         lower_bound = mean_value - (std_value * threshold)
         upper_bound = mean_value + (std_value * threshold)
 
-        # Replace outliers outside of the bounds with NaN
-        data_no_outliers[col] = np.where((data_no_outliers[col] < lower_bound) | (data_no_outliers[col] > upper_bound), np.nan, data_no_outliers[col])
+        data = data.loc[(data[col] >= lower_bound) & (data[col] <= upper_bound)]
+    return data
 
-    return data_no_outliers
-
-
-def remove_outliers_iso_forest(data, contamination=0.01):
+def remove_outliers_iso_forest(data, contamination="auto"):
     '''
-    Removing outliers based on the Isolation Forest algorithm
-    :param DataFrame data: a DataFrame
+    Method removes outliers using an iso forest, ignoring NaN values, for each column individually.
+    :param object column_of_data: a column or series of a dataframe
     :param float contamination: level at which outliers are trimmed (0-0.5)
-    :return: DataFrame with outliers set to NaN
     '''
-    nan_mask = data.isna()
-    data = data.fillna(data.mean())
-    iso_forest = IsolationForest(contamination=contamination)
-    yhat = iso_forest.fit_predict(data)
-    # Set imputed outliers to NaN, keeping original NaN values
-    data[yhat == -1] = np.nan
-    data = data.where(~nan_mask, np.nan)
-    return data
+    
+    # Create a copy of the DataFrame to avoid modifying the original one
+    result = data.copy()
 
+    # Process each column separately
+    for col in data.columns:
+        # Separate NaN and non-NaN values for the column
+        non_nan_data = data[col].dropna()
+        nan_data = data[col][data[col].isna()]
 
-def remove_outliers_elliptic_envelope(data, contamination=0.01):
-    '''
-    Removing outliers based on the Elliptic Envelope algorithm
-    :param DataFrame data: a DataFrame
-    :param float contamination: level at which outliers are trimmed (0-0.5)
-    :return: DataFrame with outliers set to NaN
-    '''
-    nan_mask = data.isna()
-    data = data.fillna(data.mean())
-    ee = EllipticEnvelope(contamination=contamination)
-    yhat = ee.fit_predict(data)
-    # Set imputed outliers to NaN, keeping original NaN values
-    data[yhat == -1] = np.nan
-    data = data.where(~nan_mask, np.nan)
-    return data
+        # Check if non_nan_data is not empty
+        if not non_nan_data.empty:
+            # Apply Isolation Forest only on non-NaN data
+            iso = IsolationForest(contamination=contamination)
+            yhat = iso.fit_predict(non_nan_data.values.reshape(-1, 1))
 
-def remove_outliers_local_outlier(data, n_neighbors=2):
-    '''
-    Removing outliers based on the Local Outlier Factor algorithm
-    :param DataFrame data: a DataFrame
-    :param int n_neighbors: number of neighbors to consider
-    :return: DataFrame with outliers set to NaN
-    '''
-    nan_mask = data.isna()
-    data = data.fillna(data.mean())
-    lof = LocalOutlierFactor(n_neighbors=n_neighbors)
-    yhat = lof.fit_predict(data)
-    # Set imputed outliers to NaN, keeping original NaN values
-    data[yhat == -1] = np.nan
-    data = data.where(~nan_mask, np.nan)
-    return data
+            # Select all rows that are not outliers
+            mask = yhat != -1
 
-def remove_outliers_one_class_svm(data):
-    '''
-    Removing outliers based on the One-Class SVM algorithm
-    :param DataFrame data: a DataFrame
-    :return: DataFrame with outliers set to NaN
-    '''
-    nan_mask = data.isna()
-    data = data.fillna(data.mean())
-    svm_model = OneClassSVM(nu=0.01)
-    yhat = svm_model.fit_predict(data)
-    # Set imputed outliers to NaN, keeping original NaN values
-    data[yhat == -1] = np.nan
-    data = data.where(~nan_mask, np.nan)
-    return data
+            # Mark outliers as NaN
+            non_nan_data[mask] = np.nan
+
+            # Combine processed non-NaN data with original NaN values for the column
+            combined_data = pd.concat([non_nan_data, nan_data]).sort_index()
+            result[col] = combined_data
+
+    return result
 
 def remove_outliers_min_covariance_det(data, contamination=0.01):
     '''
@@ -169,11 +133,54 @@ def remove_outliers_min_covariance_det(data, contamination=0.01):
     :param float contamination: level at which outliers are trimmed (0-0.5)
     :return: DataFrame with outliers removed for each column
     '''
-    nan_mask = data.isna()
-    data = data.fillna(data.mean())
-    ee = EllipticEnvelope(contamination=contamination)
+    cleaned_data = pd.DataFrame(index=data.index, columns=data.columns)
+
+    for column in data.columns:
+        column_data = data[column]
+        non_nan_values = column_data.dropna().values.reshape(-1, 1)
+
+        ee = EllipticEnvelope(contamination=contamination)
+        yhat = ee.fit_predict(non_nan_values)
+
+        # select all rows that are not outliers
+        mask = yhat != -1
+        cleaned_data[column] = np.nan
+        cleaned_data.loc[mask, column] = column_data[mask]
+
+    return cleaned_data
+
+def remove_outliers_local_outlier(data, n_neighbors=2):
+    '''
+    Removing outliers based on a neighbor distance from density algorithm for each column
+    :param DataFrame data: a DataFrame
+    :param int n_neighbors: number of neighbors to consider
+    :return: DataFrame with outliers removed for each column
+    '''
+    cleaned_data = pd.DataFrame(index=data.index, columns=data.columns)
+
+    for column in data.columns:
+        column_data = data[column]
+        non_nan_values = column_data.dropna().values.reshape(-1, 1)
+
+        lof = LocalOutlierFactor(n_neighbors=n_neighbors)
+        yhat = lof.fit_predict(non_nan_values)
+
+        # select all rows that are not outliers
+        mask = yhat != -1
+        cleaned_data[column] = np.nan
+        cleaned_data.loc[mask, column] = column_data[mask]
+
+    return cleaned_data
+
+def remove_outliers_one_class_svm(data):
+    '''
+    removeing outliers based on an unsupervised support vector machine model
+    :param object column_of_data: a column or series of a dataframe
+    '''
+    # identify outliers in the training dataset
+    ee = OneClassSVM(nu=0.01)
     yhat = ee.fit_predict(data)
-    # Set imputed outliers to NaN, keeping original NaN values
-    data[yhat == -1] = np.nan
-    data = data.where(~nan_mask, np.nan)
-    return data
+    # select all rows that are not outliers
+    mask = yhat != -1
+    return data[mask]
+
