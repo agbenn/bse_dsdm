@@ -9,7 +9,7 @@ The `bse_dsdm` package is a Python toolkit designed to simplify and streamline v
 ## Features
 
 - **Data Preprocessing:** Efficient tools for cleaning, transforming, and preparing data for analysis and modeling.
-- **Data Exploration:** Visualizations and statistical analyses to gain insights into the dataset's characteristics.
+- **Graphing:** Visualizations and statistical analyses to gain insights into the dataset's characteristics.
 - **Model Development:** Simplified interfaces for training machine learning models on your data.
 - **Accuracy Testing:** Simplified interfaces for testing model accuracies.
 
