@@ -5,20 +5,7 @@ from sklearn.covariance import EllipticEnvelope
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.svm import OneClassSVM
 
-def drop_complete_columns(df, threshold=80): 
-    '''
-    '''
-    # Calculate the percentage of missing values in each column
-    missing_percentages = df.isnull().sum() / len(df) * 100
 
-    # Define the threshold for dropping columns (80% or more missing values)
-    threshold = 80
-
-    # Get the column names that exceed the threshold
-    columns_to_drop = missing_percentages[missing_percentages >= threshold].index
-
-    # Drop the columns from the DataFrame
-    return df.drop(columns_to_drop, axis=1)
 
 def remove_outliers(df, removal_type="std", cov_contamination=0.3, std_threshold=3, iqr_multiplier=1.5, local_n_neighbors=2):
     """

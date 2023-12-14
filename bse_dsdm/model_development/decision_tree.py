@@ -64,23 +64,7 @@ def get_entropy(column_of_labels):
     return ent
 
 
-def fit_random_forest(X,y):
-    # Initialize a random forest classifier
-    rf_classifier = RandomForestClassifier(n_estimators=100, random_state=1)
 
-    # Train the random forest model
-    rf_classifier.fit(X, y)
-
-    return rf_classifier
-
-def fit_light_gbm(X,y):
-    # Initialize a LightGBM classifier
-    lgb_classifier = lgb.LGBMClassifier(n_estimators=100, random_state=1)
-
-    # Train the LightGBM model
-    lgb_classifier.fit(X, X)
-
-    return lgb_classifier
 
 def plot_decision_tree(clf, feature_names, class_names):
     # Plot the decision tree
