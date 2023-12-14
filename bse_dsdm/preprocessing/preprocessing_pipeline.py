@@ -4,8 +4,6 @@ from bse_dsdm.preprocessing.value_encoder import *
 from bse_dsdm.preprocessing.value_imputer import *
 from bse_dsdm.preprocessing.exploratory_analysis import *
 from bse_dsdm.preprocessing.outlier_imputer import *
-from sklearn.model_selection import cross_val_score
-from sklearn.linear_model import LogisticRegression, LinearRegression
 
 # TODO add a retain datasets flag
 
@@ -21,30 +19,6 @@ def preprocessing_continuous_outlier_removal_pipeline(datasets, continuous_colum
         temp_dataset = temp_dataset.dropna(subset=continuous_columns)
         new_datasets.append(temp_dataset)
 
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = remove_outliers_local_outlier(temp_dataset[continuous_columns])
-        temp_dataset = temp_dataset.dropna(subset=continuous_columns)
-        new_datasets.append(temp_dataset)
-
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = remove_outliers_min_covariance_det(temp_dataset[continuous_columns])
-        temp_dataset = temp_dataset.dropna(subset=continuous_columns)
-        new_datasets.append(temp_dataset)
-
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = remove_outliers_iso_forest(temp_dataset[continuous_columns])
-        temp_dataset = temp_dataset.dropna(subset=continuous_columns)
-        new_datasets.append(temp_dataset)
-
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = remove_outliers_std_deviation(temp_dataset[continuous_columns])
-        temp_dataset = temp_dataset.dropna(subset=continuous_columns)
-        new_datasets.append(temp_dataset)
-
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = remove_outliers_iqr(temp_dataset[continuous_columns])
-        temp_dataset = temp_dataset.dropna(subset=continuous_columns)
-        new_datasets.append(temp_dataset)
    
     return new_datasets
 
@@ -85,20 +59,6 @@ def preprocessing_encode_ordinal_pipeline(datasets, ordinal_cols, retain_previou
     for dataset in datasets: 
         temp_dataset = dataset.copy()
         temp_dataset[ordinal_cols] = encode_ordinal_columns(temp_dataset[ordinal_cols])
-        new_datasets.append(temp_dataset)
-    return new_datasets
-
-def preprocessing_outlier_imputer_pipeline(datasets, continuous_columns, retain_previous_datasets=False):
-    new_datasets = []
-    if retain_previous_datasets:
-        new_datasets = datasets
-
-    for dataset in datasets:
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = impute_outliers_with_mean(temp_dataset[continuous_columns],outlier_detection_method='iso_forest')
-        new_datasets.append(temp_dataset)
-        temp_dataset = dataset.copy()
-        temp_dataset[continuous_columns] = impute_outliers_with_mean(temp_dataset[continuous_columns],outlier_detection_method='svm')
         new_datasets.append(temp_dataset)
     return new_datasets
 

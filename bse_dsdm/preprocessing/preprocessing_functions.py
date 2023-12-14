@@ -52,3 +52,19 @@ def extract_string(df, column_name):
     df_encoded = df[column_name].str.get_dummies(sep=',')
     df = pd.concat([df, df_encoded], axis=1)
     return df
+
+
+def remove_columns_with_na(df, threshold=80): 
+    '''
+    '''
+    # Calculate the percentage of missing values in each column
+    missing_percentages = df.isnull().sum() / len(df) * 100
+
+    # Define the threshold for dropping columns (80% or more missing values)
+    threshold = 80
+
+    # Get the column names that exceed the threshold
+    columns_to_drop = missing_percentages[missing_percentages >= threshold].index
+
+    # Drop the columns from the DataFrame
+    return df.drop(columns_to_drop, axis=1)
