@@ -51,5 +51,5 @@ def impute_categorical(df, columns_to_impute):
 
         mode_val = df[col].mode().iloc[0]
         filled_df[col].fillna(mode_val, inplace=True)
-
+    print(filled_df)
     return filled_df

@@ -9,7 +9,7 @@ def test_feature_scaling():
     data = pd.DataFrame(data)
 
     
-    assert scale_features(data, 'z_score')['A'].sum().astype(int) == 0
-    assert scale_features(data, 'min_max')['A'].sum().astype(int) == 1
-    assert scale_features(data, 'min_max_mean')['A'].sum().astype(int) == 0
-    assert scale_features(data, 'iqr')['A'].sum().astype(int) == 24
+    assert scale_features(data,data.columns, 'z_score')['A'].sum().astype(int) == 0
+    assert scale_features(data,data.columns, 'min_max')['A'].sum().astype(int) == 1
+    assert scale_features(data,data.columns, 'min_max_mean')['A'].sum().astype(int) == 0
+    assert scale_features(data,data.columns, 'iqr')['A'].sum().astype(int) == 24
