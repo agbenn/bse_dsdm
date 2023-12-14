@@ -29,7 +29,7 @@ def test_get_columns_by_type():
     df = pd.DataFrame(data)
 
     # Test the function
-    categorical_na_cols, numerical_na_cols = get_columns_by_type(df)
+    categorical_na_cols, numerical_na_cols = get_na_columns_by_type(df)
     
 
     assert 'A' in categorical_na_cols

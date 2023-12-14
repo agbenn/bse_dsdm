@@ -23,7 +23,7 @@ def test_encode_categorical_variable():
 
 @pytest.mark.unittest
 def test_encode_ordinal_variable():
-    assert encode_ordinal_columns(data1).shape[1] == 4
+    assert encode_ordinal_columns(data1, data1.columns).shape[1] == 4
 
 
 @pytest.mark.unittest

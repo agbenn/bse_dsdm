@@ -15,10 +15,10 @@ The `bse_dsdm` package is a Python toolkit designed to simplify and streamline v
 
 ## Installation
 
-You can install `bse_dsdm` using `pip`:
+You can install `bse_dsdm` using `pip` from the root directory (the one with setup.py in it):
 
 ```bash
-pip install bse_dsdm
+pip install -e .
 ```
 ## Contributing
 
