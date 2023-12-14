@@ -11,7 +11,7 @@ from math import log, e
 import seaborn as sns
 
 
-#TODO create a function to output all of the above in a report
+#TODO create a function to auto output metrics in a report
 
 
 def remove_columns_with_na(df, threshold):
@@ -24,6 +24,12 @@ def remove_columns_with_na(df, threshold):
 
 
 def get_columns_by_type(df):
+    categorical_columns = list(df.select_dtypes(include=['object']).columns)
+    numerical_columns = list(df.select_dtypes(exclude=['object']).columns)
+
+    return categorical_columns, numerical_columns
+
+def get_na_columns_by_type(df):
     categorical_columns = df.select_dtypes(include=['object']).columns
     numerical_columns = df.select_dtypes(exclude=['object']).columns
 

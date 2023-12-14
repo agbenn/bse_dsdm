@@ -1,6 +1,12 @@
 from scipy import stats 
 
 
+'''
+# Standardize the features
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)'''
+
 def scale_features(data,columns_to_scale, scaling_method='z_score'):
     '''
     cumulative method for individual methods

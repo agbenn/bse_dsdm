@@ -38,11 +38,11 @@ We welcome contributions from the community! To contribute to `bse_dsdm`, please
 3. **Make your changes and commit them with a clear commit message.**
 
 4. **Push your branch to your fork:**
-```bash
-git push origin feature-name
-```
+    ```bash
+    git push origin feature-name
+    ```
 
-5. **Open a pull request, providing a detailed description of your changes.**
+5. **Open a pull request, providing a detailed description of your changes. Please be sure to include unit tests into the testing directory with any functions.**
 
 
 6. **Your pull request will be reviewed, and once accepted, it will be merged into the main branch.**
