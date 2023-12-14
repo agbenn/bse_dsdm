@@ -11,26 +11,42 @@ import warnings
 
 
 #TODO add a function to minimize or maximize the error term instead of always minimizing
-def remove_optimal_outliers(X,y,model_type, accuracy_test='neg_mean_squared_error'):
+def remove_optimal_outliers(X,y, accuracy_test='neg_mean_squared_error'):
+    """
+
+        Parameters:
+        - X (DataFrame): Features.
+        - y (Series): Target variable.
+        - model_type (str): Type of model ('binary', 'multiclass', 'regression').
+        - accuracy_test (str): Scoring metric for model evaluation (default is 'accuracy').
+
+        Returns:
+        - Tuple: DataFrame with outliers removed, dictionary with optimal accuracy score and parameter value.
+
+        decrease iqr to increase outlier removal
+        increase cov_contamination to increase outlier removal
+        decrease std_threshold to increase outlier removal
+        local_n_neighbors depends on the sample size
+    """
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        std_results = remove_outliers(X,y,model_type=model_type, removal_type='std', accuracy_test=accuracy_test)
-        iqr_results = remove_outliers(X,y,model_type=model_type, removal_type='iqr', accuracy_test=accuracy_test)
-        iso_forest_results = remove_outliers(X,y,model_type=model_type, removal_type='iso_forest', accuracy_test=accuracy_test)
-        min_cov_results = remove_outliers(X,y,model_type=model_type, removal_type='min_covariance', accuracy_test=accuracy_test)
-        local_results = remove_outliers(X,y,model_type=model_type, removal_type='local_outlier', accuracy_test=accuracy_test)
-        svm_results = remove_outliers(X,y,model_type=model_type, removal_type='svm', accuracy_test=accuracy_test)
+        iqr_results = remove_outliers(X,y, removal_type='iqr', accuracy_test=accuracy_test)
+        iso_forest_results = remove_outliers(X,y, removal_type='iso_forest', accuracy_test=accuracy_test)
+        min_cov_results = remove_outliers(X,y, removal_type='min_covariance', accuracy_test=accuracy_test)
+        local_results = remove_outliers(X,y, removal_type='local_outlier', accuracy_test=accuracy_test)
+        svm_results = remove_outliers(X,y, removal_type='svm', accuracy_test=accuracy_test)
 
         min_results = None
-        for results in [std_results,iqr_results,iso_forest_results,min_cov_results,local_results,svm_results]:
+        for results in [iqr_results,iso_forest_results,min_cov_results,local_results,svm_results]:
             print(results)
-            if 'accuracy_score' in results.keys() and results['accuracy_score'] is not None:
-                if min_results is None or (results['accuracy_score'].mean() > results['accuracy_score'].mean()):
+            print(results['accuracy_score'].mean())
+            if 'accuracy_score' in results.keys() and results['accuracy_score'] is not None and results['accuracy_score'].mean() < 0:
+                if min_results is None or (results['accuracy_score'].mean() > min_results['accuracy_score'].mean()):
                     min_results = results
         
         return min_results
 
-def remove_outliers(X, y, model_type, accuracy_test='mean_squared_error', removal_type="std", param_grid=None):
+def remove_outliers(X, y, accuracy_test='neg_mean_squared_error', removal_type="std", param_grid=None):
     """
 
     Parameters:
@@ -49,20 +65,15 @@ def remove_outliers(X, y, model_type, accuracy_test='mean_squared_error', remova
     decrease std_threshold to increase outlier removal
     local_n_neighbors depends on the sample size
     """
-    model = None
-    if model_type in ['binary','multiclass']:  # Binary / Multiclass Classification 
-        model = LogisticRegression()
-    elif model_type == 'linear_regression': # Regression
-        model = LinearRegression()
-    else: 
-        print("Invalid model_type selection or y values.")
+
+    model = LogisticRegression()
 
     print('removing outliers with ' + removal_type + ' method')
 
     if param_grid == None: 
         param_grid = {
-            'std':np.arange(0.5,3,.5),
-            'iqr':np.arange(0,3,.5),
+            'std':np.arange(1,3,.5),
+            'iqr':np.arange(1,3,.5),
             'iso_forest':np.arange(0.1,.5,.04),
             'min_covariance':np.arange(0.1,.5,.04),
             "local_outlier":np.arange(1,100,5),
@@ -94,15 +105,17 @@ def remove_outliers(X, y, model_type, accuracy_test='mean_squared_error', remova
 
             X_train = X.dropna()
             y_train = y.iloc[X_train.index]
-
+            print(X_train)
+            print(y_train)
             accuracy = None
             try:
-                accuracy = cross_val_score(model, X_train, y_train, cv=5, scoring=accuracy_test)
+                accuracy = cross_val_score(model, X_train, y_train, cv=3, scoring=accuracy_test)
+                print(accuracy)
             except Exception as e:
                 print('an exception occured when getting the accuracy')
                 print(str(e))
 
-            if min_accuracy is None or (accuracy is not None and accuracy.mean() > min_accuracy.mean()):
+            if min_accuracy is None or (accuracy is not None and accuracy.mean() < 0 and accuracy.mean() > min_accuracy.mean()):
                 min_accuracy = accuracy
                 best_param = param_val
                 best_df = X.copy()

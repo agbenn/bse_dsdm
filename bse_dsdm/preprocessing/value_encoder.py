@@ -29,7 +29,7 @@ def encode_ordinal_columns(data, columns=None, mapping=None):
     else:
         # Apply label encoding
         encoder = LabelEncoder()
-        for col in data.columns:
+        for col in columns:
             encoded_data = encoder.fit_transform(data[col])
             full_col_name = col + '_encoded'
             data[full_col_name] = encoded_data

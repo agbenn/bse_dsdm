@@ -24,11 +24,8 @@ def remove_columns_with_na(df, threshold):
 
 
 def get_columns_by_type(df):
-    categorical_columns = df.select_dtypes(include=['object']).columns
-    numerical_columns = df.select_dtypes(exclude=['object']).columns
-
-    #categorical_na_columns = [col for col in categorical_columns if df[col].isna().any()]
-    #numerical_na_columns = [col for col in numerical_columns if df[col].isna().any()]
+    categorical_columns = list(df.select_dtypes(include=['object']).columns)
+    numerical_columns = list(df.select_dtypes(exclude=['object']).columns)
 
     return categorical_columns, numerical_columns
 
