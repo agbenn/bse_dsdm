@@ -6,35 +6,28 @@
 │   ├── accuracy_testing
 │   │   ├── cross_validation.py
 │   │   └── error_testing_methods.py
-│   ├── data
-│   │   ├── test.csv
-│   │   └── train.csv
 │   ├── graphing
 │   │   └── graphing.py
 │   ├── model_development
 │   │   ├── binary_classifier.py
 │   │   ├── continuous_regressions.py
 │   │   ├── decision_tree.py
-│   │   ├── model_training_pipeline.py
 │   │   ├── model_tuning.py
-│   │   └── regressions.py
+│   │   ├── model.py
+│   │   ├── regressions.py
+│   │   └── resampling.py
 │   ├── preprocessing
 │   │   ├── data_loader.py
-│   │   ├── exploratory_analysis.py
 │   │   ├── feature_scaling.py
-│   │   ├── outlier_detection copy.py
+│   │   ├── missing_values.py
 │   │   ├── outlier_detection.py
-│   │   ├── preprocessing_functions.py
-│   │   ├── preprocessing_pipeline.py
-│   │   ├── random_search.py
-│   │   ├── resampling.py
 │   │   ├── value_encoder.py
 │   │   └── value_imputer.py
 │   ├── testing
 │   │   ├── preprocessing
 │   │   │   ├── test_feature_scaling.py
-│   │   │   ├── test_outlier_detection.py
-│   │   │   ├── test_preprocessing_functions.py
+│   │   │   ├── test_missing_values.py
+│   │   │   ├── test_outlier_detections.py
 │   │   │   ├── test_value_encoder.py
 │   │   │   └── test_value_imputer.py
 │   │   └── pytest.ini
