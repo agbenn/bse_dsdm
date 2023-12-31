@@ -1,8 +1,6 @@
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression, Lasso, Ridge, LogisticRegression, RandomForestRegressor
-from sklearn.model_selection import train_test_split
-
-
+from sklearn.linear_model import LinearRegression, Lasso, Ridge
+from sklearn.ensemble import RandomForestRegressor
 
 
 def get_fitted_polynomial_regressor(X,y, poly_degree=2, model="default"):
@@ -39,8 +37,22 @@ def get_fitted_random_forest_regressor(X,y):
     rf_model.fit(X, y)
     return rf_model
 
+
 def get_fitted_regressor(X,y, model="default"):
-    
+    '''
+    Sparsity:
+
+        Ridge regression does not lead to sparsity in the coefficient estimates.
+        Lasso regression often results in sparse models with some coefficients exactly equal to zero.
+        Use Cases:
+
+        Ridge regression is useful when dealing with multicollinearity and you want to shrink coefficients without necessarily excluding features.
+        Lasso regression is suitable for situations where feature selection is desired, and some features can be entirely disregarded.
+        Solution Stability:
+
+        Ridge regression tends to be more stable when the dataset has highly correlated features.
+        Lasso regression may be less stable, and the inclusion or exclusion of a single feature can sometimes lead to significant changes in the model.
+    '''
     if model == "default":
         poly_model = LinearRegression()
     elif model == "lasso":

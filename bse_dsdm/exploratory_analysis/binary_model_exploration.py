@@ -1,12 +1,5 @@
-
-import matplotlib.pyplot as plt
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score, confusion_matrix
-import lightgbm as lgb
 import numpy as np
 from math import log, e
-import seaborn as sns
 
 def gini_impurity(value_counts):
     """
@@ -62,48 +55,3 @@ def get_entropy(column_of_labels):
         ent -= i * log(i, base)
 
     return ent
-
-def fit_decision_tree(X,y):
-    # Train a Decision Tree classifier
-    clf = DecisionTreeClassifier(random_state=2, max_depth = 3) # Restric to 3 levels
-    clf.fit(X, y)
-
-def fit_random_forest(X,y):
-    # Initialize a random forest classifier
-    rf_classifier = RandomForestClassifier(n_estimators=100, random_state=1)
-
-    # Train the random forest model
-    rf_classifier.fit(X_train, y_train)
-
-    # Make predictions on the test set
-    y_pred = rf_classifier.predict(X_test)
-
-def fit_light_gbm(X,y):
-    # Initialize a LightGBM classifier
-    lgb_classifier = lgb.LGBMClassifier(n_estimators=100, random_state=1)
-
-    # Train the LightGBM model
-    lgb_classifier.fit(X_train, y_train)
-
-    # Make predictions on the test set
-    y_pred = lgb_classifier.predict(X_test)
-
-    # Calculate accuracy
-    accuracy = accuracy_score(y_test, y_pred)
-
-def plot_decision_tree(clf, feature_names, class_names):
-    # Plot the decision tree
-    plt.figure(figsize=(12, 8))
-    plot_tree(clf, filled=True, feature_names=feature_names, class_names=class_names)
-    plt.show()
-
-def plot_confusion_matrix():
-    # Plot confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
-    plt.figure(figsize=(6, 4))
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
-    plt.title("Confusion Matrix")
-    plt.xlabel("Predicted")
-    plt.ylabel("True")
-    plt.show()
-
