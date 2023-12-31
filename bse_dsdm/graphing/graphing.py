@@ -2,7 +2,7 @@ import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.tree import plot_tree
-
+from sklearn.metrics import confusion_matrix
 
 
 def plot_3d_scatter(data, x_col,y_col,z_col,color_col, x_title=None, y_title=None, z_title=None):
@@ -169,9 +169,9 @@ def plot_decision_tree(clf, feature_names, class_names):
     plot_tree(clf, filled=True, feature_names=feature_names, class_names=class_names)
     plt.show()
 
-def plot_confusion_matrix():
+def plot_confusion_matrix(y_true, y_pred):
     # Plot confusion matrix
-    cm = confusion_matrix(y_test, y_pred)
+    cm = confusion_matrix(y_true, y_pred)
     plt.figure(figsize=(6, 4))
     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
     plt.title("Confusion Matrix")
