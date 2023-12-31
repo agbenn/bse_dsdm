@@ -1,12 +1,7 @@
-from sklearn.model_selection import KFold, StratifiedKFold, LeaveOneOut, cross_validate
+from sklearn.model_selection import StratifiedKFold, LeaveOneOut, cross_validate
 from sklearn.metrics import make_scorer, r2_score, mean_squared_error, accuracy_score
-import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score, roc_curve, auc
-from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import accuracy_score
 
 def k_folds_cross_validation(model, X, y, no_k_folds=3):
     """
